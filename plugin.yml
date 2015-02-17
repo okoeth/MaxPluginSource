@@ -1,0 +1,50 @@
+name: MaxPlugin
+main: MaxKoeth\MaxPlugin\Main
+version: 1.0
+api: [1.1.0]
+load: POSTWORLD
+author: Max Koeth
+commands:
+ function1:
+  description: "Executes function 1"
+  usage: "/function1"
+  permission: maxplugin.command.function1
+ function2:
+  description: "Executes function 2"
+  usage: "/function2"
+  permission: maxplugin.command.function2
+permissions:
+ maxplugin:
+  default: op
+  description: "Allows access to all MaxPlugin features."
+  children:
+   maxplugin.command:
+    default: op
+    description: "Allows access to all MaxPlugin commands."
+    children:
+     maxplugin.command.function1:
+      default: true
+      description: "Allows access to the function1 command."
+     maxplugin.command.function2:
+      default: true
+      description: "Allows access to the function2 command."
+   maxplugin.function1:
+    default: op
+    description: "Allows access to all function1 features."
+    children:
+     maxplugin.function1.self:
+      default: true
+      description: "Allows access to your own function1."
+     maxplugin.function1.others:
+      default: op
+      description: "Allows access to other's function1."
+   maxplugin.function2:
+    default: op
+    description: "Allows access to all function2 features."
+    children:
+     maxplugin.function2.self:
+      default: true
+      description: "Allows access to setting your own function2."
+     maxplugin.function2.others:
+      default: op
+      description: "Allows access to setting other's function2."
