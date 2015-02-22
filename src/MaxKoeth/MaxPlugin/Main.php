@@ -40,33 +40,54 @@ class Main extends PluginBase implements Listener {
   public function onCommand(CommandSender $p, Command $cmd, $label, array $args) {
     if(strtolower($cmd->getName()) == "function1") {
       $this->getLogger()->info(TextFormat::YELLOW . "function1 was called...");
-      foreach ($this->getServer()->getLevels() as &$level) {
-        $this->getLogger()->info($level->getName());
-      }
-      if ($p instanceof Player) {
-        $pos = $p->getPosition();
-        $p->getLevel()->setBlock($pos, new Stone());
-        $p->sendMessage("function1 was called...".$p->getLevel()->getName());
-      }
     } else if(strtolower($cmd->getName()) == "function2") {
       $this->getLogger()->info(TextFormat::YELLOW . "function2 was called...");
-      if ($p instanceof Player) {
-        $p->sendMessage("function2 was called...");
-      }
+    } else if(strtolower($cmd->getName()) == "chat") {
+      $this->getLogger()->info(TextFormat::YELLOW . "chat was called...");
+      $this->onCommandChat($p, $cmd, $label, $args);
     }
     return true;
   }
 
-  /**
-  * @param PlayerInteractEvent $event
-  *
-  * @priority HIGHEST
-  * @ignoreCancelled true
-  */
+  /*
+   *  onCommandChat: Unsere eigene Chat Funktion
+   */
+  public function onCommandChat(CommandSender $p, Command $cmd, $label, array $args) {
+    if ($p instanceof Player) {
+      $p->sendMessage("Chat was called...");
+
+      # Pruefe Anzahl der Parameter
+      if (count($args)<2) {
+        $p->sendMessage("Parameter missing, read the help");
+      }
+
+      # Verbinde hintere Parameter zu einer Message
+      $message=$args[1];
+      for ($i=2; $i<count($args); $i=$i+1) { 
+        $message=$message . " " . $args[$i];
+        $this->getLogger()->info($message);
+      }
+
+      # Suche den Adressaten der Message
+      $playername=$args[0];
+      $player=$this->getServer()->getPlayer($playername);
+
+      # Wenn gefunden, schicke die Message
+      if ($player==null) {
+        $p->sendMessage("Player is offline");
+      } else {
+        $player->sendMessage($message);
+      }      
+    }
+  }
+
+  /*
+   *  onTouch: Will be called when touched by item
+   */
   public function onTouch(PlayerInteractEvent $event) {
     $p = $event->getPlayer();
     $i = $event->getItem();
-    $p->sendMessage(TextFormat::RED . $i->getName());
+    // $p->sendMessage(TextFormat::RED . $i->getName());
   }
 }
 ?>
